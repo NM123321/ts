@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学生图书管理系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* 认证页面通用样式 */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .auth-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+            padding: 30px;
+        }
+        
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .auth-logo {
+            font-size: 3rem;
+            color: #3498db;
+            margin-bottom: 15px;
+        }
+        
+        .auth-title {
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .auth-subtitle {
+            color: #7f8c8d;
+            font-weight: normal;
+        }
+        
+        /* 表单样式 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        
+        .password-wrapper {
+            position: relative;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+        
+        .form-hint {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+        
+        .form-check {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .form-check-input {
+            margin-right: 10px;
+        }
+        
+        .btn {
+            padding: 12px 15px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+        
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        
+        .text-center {
+            text-align: center;
+        }
+        
+        .mt-3 {
+            margin-top: 15px;
+        }
+        
+        .text-muted {
+            color: #7f8c8d;
+        }
+        
+        .text-link {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .text-link:hover {
+            text-decoration: underline;
+        }
+        
+        .alert {
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .alert-danger {
+            background-color: #fdecea;
+            color: #e74c3c;
+            border: 1px solid #fcd5cf;
+        }
+        
+        .alert-success {
+            background-color: #eafaf1;
+            color: #27ae60;
+            border: 1px solid #d5f5e3;
+        }
+        
+        /* 主系统样式 */
+        .system-container {
+            display: none;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            font-size: 2rem;
+            margin-right: 15px;
+        }
+        
+        .user-info {
+            text-align: right;
+        }
+        
+        .user-info p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 15px;
+            padding: 0 20px;
+        }
+        
+        .stat-item {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-align: center;
+            min-width: 120px;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        @media (min-width: 768px) {
+            .main-content {
+                grid-template-columns: 300px 1fr;
+            }
+        }
+        
+        .panel {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .panel-title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .panel-title i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+        
+        .search-box {
+            margin-bottom: 20px;
+        }
+        
+        .category-list {
+            list-style: none;
+        }
+        
+        .category-list li {
+            margin-bottom: 8px;
+        }
+        
+        .category-list a {
+            color: #3498db;
+            text-decoration: none;
+            padding: 5px 10px;
+            display: block;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        
+        .category-list a:hover, .category-list a.active {
+            background-color: #e8f4fd;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .status-available {
+            color: #2ecc71;
+            font-weight: 600;
+        }
+        
+        .status-borrowed {
+            color: #e74c3c;
+            font-weight: 600;
+        }
+        
+        .borrowed-books {
+            margin-top: 20px;
+        }
+        
+        .book-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .book-item:last-child {
+            border-bottom: none;
+        }
+        
+        .book-info {
+            flex: 1;
+        }
+        
+        .book-title {
+            font-weight: 600;
+        }
+        
+        .book-meta {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #7f8c8d;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+        
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        /* 安全提示样式 */
+        .security-tips {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .security-tips h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .security-tips ul {
+            margin-left: 20px;
+            color: #555;
+        }
+        
+        .security-tips li {
+            margin-bottom: 5px;
+        }
+        
+        /* 注册页面 */
+        #register-container {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 登录界面 -->
+    <div class="auth-container" id="login-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <i class="fas fa-book-reader"></i>
+                </div>
+                <h2 class="auth-title">学生图书管理系统</h2>
+                <p class="auth-subtitle">请使用学号和密码登录</p>
+            </div>
+            
+            <div id="login-alert" class="alert alert-danger" style="display: none;"></div>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-student-id" class="form-label">学号</label>
+                    <input type="text" id="login-student-id" class="form-control" placeholder="请输入学号" required 
+                           pattern="^[0-9]{6,10}$" title="学号为6-10位数字">
+                    <div class="form-hint">例如: 2023001</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="login-password" class="form-label">密码</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="login-password" class="form-control" placeholder="请输入密码" required
+                               pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$" 
+                               title="密码至少6位，包含字母和数字">
+                        <button type="button" class="toggle-password" id="toggle-login-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="form-hint">密码长度至少6位，包含字母和数字</div>
+                </div>
+                
+                <div class="form-check">
+                    <input type="checkbox" id="remember-me" class="form-check-input">
+                    <label for="remember-me" class="form-check-label">记住我（公共电脑请勿勾选）</label>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-sign-in-alt"></i> 登录
+                </button>
+                
+                <div class="mt-3 text-center">
+                    <a href="#" class="text-link" id="forgot-password-link">忘记密码?</a> | 
+                    <a href="#" class="text-link" id="register-link">注册账号</a>
+                </div>
+                
+                <div class="security-tips">
+                    <h4><i class="fas fa-shield-alt"></i> 安全提示</h4>
+                    <ul>
+                        <li>请勿在公共电脑上勾选"记住我"</li>
+                        <li>定期修改您的密码以保障安全</li>
+                        <li>如遇异常登录，请立即联系管理员</li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- 注册界面 -->
+    <div class="auth-container" id="register-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <h2 class="auth-title">账号注册</h2>
+                <p class="auth-subtitle">请填写以下信息完成注册</p>
+            </div>
+            
+            <div id="register-alert" class="alert" style="display: none;"></div>
+            
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="register-student-id" class="form-label">学号</label>
+                    <input type="text" id="register-student-id" class="form-control" placeholder="请输入学号" required
+                           pattern="^[0-9]{6,10}$" title="学号为6-10位数字">
+                    <div class="form-hint">学号为6-10位数字</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="register-name" class="form-label">姓名</label>
+                    <input type="text" id="register-name" class="form-control" placeholder="请输入姓名" required
+                           pattern="^[\u4e00-\u9fa5a-zA-Z ]{2,20}$" title="姓名为2-20位汉字或字母">
+                    <div class="form-hint">请输入真实姓名</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="register-department" class="form-label">院系</label>
+                    <select id="register-department" class="form-control" required>
+                        <option value="">请选择院系</option>
+                        <option value="计算机科学与技术系">计算机科学与技术系</option>
+                        <option value="电子信息工程系">电子信息工程系</option>
+                        <option value="数学系">数学系</option>
+                        <option value="物理系">物理系</option>
+                        <option value="化学系">化学系</option>
+                        <option value="中文系">中文系</option>
+                        <option value="外语系">外语系</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="register-password" class="form-label">设置密码</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="register-password" class="form-control" placeholder="请设置密码" required
+                               pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$" 
+                               title="密码至少6位，包含字母和数字">
+                        <button type="button" class="toggle-password" id="toggle-register-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <div class="form-hint">密码至少6位，包含字母和数字</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="register-confirm-password" class="form-label">确认密码</label>
+                    <input type="password" id="register-confirm-password" class="form-control" placeholder="请再次输入密码" required>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-user-check"></i> 注册
+                </button>
+                
+                <div class="mt-3 text-center">
+                    <a href="#" class="text-link" id="back-to-login-link">已有账号？返回登录</a>
+                </div>
+                
+                <div class="security-tips">
+                    <h4><i class="fas fa-lock"></i> 密码安全建议</h4>
+                    <ul>
+                        <li>不要使用与账号相同的密码</li>
+                        <li>不要使用生日、电话号码等容易被猜测的信息</li>
+                        <li>定期更换密码以提高安全性</li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- 系统主界面 -->
+    <div class="system-container" id="system-container">
+        <div class="container">
+            <header>
+                <div class="header-content">
+                    <div class="logo">
+                        <i class="fas fa-book-reader"></i>
+                        <div>
+                            <h1>学生图书管理系统</h1>
+                            <p>便捷查询与借阅图书</p>
+                        </div>
+                    </div>
+                    <div class="user-info">
+                        <h3 id="student-name">张三（2023001）</h3>
+                        <p id="student-department">计算机科学与技术系</p>
+                        <button class="btn btn-danger" id="logout-btn" style="margin-top: 10px;">
+                            <i class="fas fa-sign-out-alt"></i> 退出登录
+                        </button>
+                    </div>
+                </div>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value" id="total-books">120</div>
+                        <div class="stat-label">馆藏总数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="available-books">85</div>
+                        <div class="stat-label">可借图书</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="my-borrowed">3</div>
+                        <div class="stat-label">我的借阅</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">15</div>
+                        <div class="stat-label">最多可借</div>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="main-content">
+                <!-- 左侧面板 -->
+                <div class="left-panel">
+                    <div class="panel">
+                        <div class="panel-title">
+                            <i class="fas fa-search"></i>
+                            <h3>图书查询</h3>
+                        </div>
+                        <div class="search-box">
+                            <input type="text" id="search-input" class="form-control" placeholder="输入书名、作者或ISBN">
+                            <button class="btn btn-primary btn-block" id="search-btn">
+                                <i class="fas fa-search"></i> 搜索
+                            </button>
+                            <button class="btn btn-primary btn-block" style="margin-top: 10px;" id="show-all-btn">
+                                <i class="fas fa-list"></i> 显示全部
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="panel" style="margin-top: 20px;">
+                        <div class="panel-title">
+                            <i class="fas fa-tags"></i>
+                            <h3>图书分类</h3>
+                        </div>
+                        <ul class="category-list" id="category-list">
+                            <li><a href="#" class="active" data-category="all">全部图书</a></li>
+                            <li><a href="#" data-category="小说">小说</a></li>
+                            <li><a href="#" data-category="文学">文学</a></li>
+                            <li><a href="#" data-category="历史">历史</a></li>
+                            <li><a href="#" data-category="科学">科学</a></li>
+                            <li><a href="#" data-category="技术">技术</a></li>
+                            <li><a href="#" data-category="哲学">哲学</a></li>
+                            <li><a href="#" data-category="艺术">艺术</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="panel borrowed-books" style="margin-top: 20px;">
+                        <div class="panel-title">
+                            <i class="fas fa-book-open"></i>
+                            <h3>我的借阅</h3>
+                        </div>
+                        <div id="my-borrowed-books">
+                            <!-- 我的借阅列表将通过JS动态生成 -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 右侧面板 -->
+                <div class="right-panel">
+                    <div class="panel">
+                        <div class="panel-title">
+                            <i class="fas fa-book"></i>
+                            <h3>图书列表</h3>
+                            <button class="btn btn-primary" style="margin-left: auto;" id="add-book-btn">
+                                <i class="fas fa-plus"></i> 添加图书
+                            </button>
+                        </div>
+                        <div class="table-container">
+                            <table id="books-table">
+                                <thead>
+                                    <tr>
+                                        <th>书名</th>
+                                        <th>作者</th>
+                                        <th>ISBN</th>
+                                        <th>类别</th>
+                                        <th>状态</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="books-table-body">
+                                    <!-- 图书列表将通过JS动态生成 -->
+                                </tbody>
+                            </table>
+                            <div id="empty-state" class="empty-state" style="display: none;">
+                                <i class="fas fa-search"></i>
+                                <h3>未找到图书</h3>
+                                <p>请尝试其他搜索关键词或类别</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 借阅确认模态框 -->
+        <div id="borrow-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">确认借阅</h3>
+                    <button class="close-modal" id="close-borrow-modal">×</button>
+                </div>
+                <div id="borrow-book-info">
+                    <!-- 借阅图书信息将通过JS动态生成 -->
+                </div>
+                <div class="form-group">
+                    <label for="borrow-days">借阅天数</label>
+                    <input type="number" id="borrow-days" class="form-control" min="1" max="30" value="15">
+                </div>
+                <button class="btn btn-primary btn-block" id="confirm-borrow">
+                    <i class="fas fa-check"></i> 确认借阅
+                </button>
+            </div>
+        </div>
+        
+        <!-- 图书详情模态框 -->
+        <div id="detail-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">图书详情</h3>
+                    <button class="close-modal" id="close-detail-modal">×</button>
+                </div>
+                <div id="book-detail-info">
+                    <!-- 图书详情将通过JS动态生成 -->
+                </div>
+                <button class="btn btn-primary btn-block" id="close-detail-btn">
+                    <i class="fas fa-times"></i> 关闭
+                </button>
+            </div>
+        </div>
+        
+        <!-- 添加图书模态框 -->
+        <div id="add-book-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">添加图书</h3>
+                    <button class="close-modal" id="close-add-book-modal">×</button>
+                </div>
+                <form id="add-book-form">
+                    <div class="form-group">
+                        <label for="book-title" class="form-label">书名</label>
+                        <input type="text" id="book-title" class="form-control" placeholder="请输入书名" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="book-author" class="form-label">作者</label>
+                        <input type="text" id="book-author" class="form-control" placeholder="请输入作者" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="book-isbn" class="form-label">ISBN</label>
+                        <input type="text" id="book-isbn" class="form-control" placeholder="请输入ISBN" required
+                               pattern="^[0-9-]{10,17}$" title="ISBN格式不正确">
+                    </div>
+                    <div class="form-group">
+                        <label for="book-genre" class="form-label">类别</label>
+                        <select id="book-genre" class="form-control" required>
+                            <option value="">请选择类别</option>
+                            <option value="小说">小说</option>
+                            <option value="文学">文学</option>
+                            <option value="历史">历史</option>
+                            <option value="科学">科学</option>
+                            <option value="技术">技术</option>
+                            <option value="哲学">哲学</option>
+                            <option value="艺术">艺术</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="book-year" class="form-label">出版年份</label>
+                        <input type="number" id="book-year" class="form-control" placeholder="请输入出版年份" required
+                               min="1000" max="2100">
+                    </div>
+                    <div class="form-group">
+                        <label for="book-description" class="form-label">图书简介</label>
+                        <textarea id="book-description" class="form-control" rows="3" placeholder="请输入图书简介"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-save"></i> 保存图书
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 页面容器
+            const loginContainer = document.getElementById('login-container');
+            const registerContainer = document.getElementById('register-container');
+            const systemContainer = document.getElementById('system-container');
+            
+            // 登录表单元素
+            const loginForm = document.getElementById('login-form');
+            const loginStudentIdInput = document.getElementById('login-student-id');
+            const loginPasswordInput = document.getElementById('login-password');
+            const toggleLoginPasswordBtn = document.getElementById('toggle-login-password');
+            const rememberMeCheckbox = document.getElementById('remember-me');
+            const loginAlert = document.getElementById('login-alert');
+            const registerLink = document.getElementById('register-link');
+            const backToLoginLink = document.getElementById('back-to-login-link');
+            
+            // 注册表单元素
+            const registerForm = document.getElementById('register-form');
+            const registerStudentIdInput = document.getElementById('register-student-id');
+            const registerNameInput = document.getElementById('register-name');
+            const registerDepartmentSelect = document.getElementById('register-department');
+            const registerPasswordInput = document.getElementById('register-password');
+            const registerConfirmPasswordInput = document.getElementById('register-confirm-password');
+            const toggleRegisterPasswordBtn = document.getElementById('toggle-register-password');
+            const registerAlert = document.getElementById('register-alert');
+            
+            // 系统界面元素
+            const logoutBtn = document.getElementById('logout-btn');
+            const studentNameEl = document.getElementById('student-name');
+            const studentDepartmentEl = document.getElementById('student-department');
+            
+            // 模拟的用户数据库（实际应用中会存储在服务器数据库）
+            let users = [
+                { id: '2023001', password: 'Password123', name: '张三', department: '计算机科学与技术系' },
+                { id: '2023002', password: 'Secure456', name: '李四', department: '电子信息工程系' },
+                { id: '2023003', password: 'Safety789', name: '王五', department: '数学系' }
+            ];
+            
+            // 检查是否有记住的用户
+            checkRememberedUser();
+            
+            // 切换密码可见性
+            toggleLoginPasswordBtn.addEventListener('click', function() {
+                togglePasswordVisibility(loginPasswordInput, this);
+            });
+            
+            toggleRegisterPasswordBtn.addEventListener('click', function() {
+                togglePasswordVisibility(registerPasswordInput, this);
+            });
+            
+            // 页面切换
+            registerLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                loginContainer.style.display = 'none';
+                registerContainer.style.display = 'flex';
+                clearAuthForms();
+            });
+            
+            backToLoginLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                registerContainer.style.display = 'none';
+                loginContainer.style.display = 'flex';
+                clearAuthForms();
+            });
+            
+            // 登录表单提交
+            loginForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const studentId = sanitizeInput(loginStudentIdInput.value.trim());
+                const password = loginPasswordInput.value.trim();
+                
+                // 客户端验证
+                if (!validateStudentId(studentId)) {
+                    showLoginError('学号格式不正确，应为6-10位数字');
+                    return;
+                }
+                
+                if (!validatePassword(password)) {
+                    showLoginError('密码至少6位，包含字母和数字');
+                    return;
+                }
+                
+                // 验证用户（实际应用中会通过API请求服务器验证）
+                // 注意：实际应用中密码应在服务器端验证，且密码应加密存储
+                const user = users.find(u => u.id === studentId);
+                
+                if (user && user.password === password) {
+                    // 登录成功
+                    hideLoginError();
+                    
+                    // 如果勾选了记住我，存储用户信息（实际应用中应使用安全的方式）
+                    if (rememberMeCheckbox.checked) {
+                        localStorage.setItem('rememberedUserId', user.id);
+                    } else {
+                        localStorage.removeItem('rememberedUserId');
+                    }
+                    
+                    // 更新用户信息显示
+                    studentNameEl.textContent = `${user.name}（${user.id}）`;
+                    studentDepartmentEl.textContent = user.department;
+                    
+                    // 切换到系统界面
+                    loginContainer.style.display = 'none';
+                    systemContainer.style.display = 'block';
+                    
+                    // 初始化图书管理系统
+                    initBookSystem(user);
+                } else {
+                    showLoginError('学号或密码不正确');
+                }
+            });
+            
+            // 注册表单提交
+            registerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const studentId = sanitizeInput(registerStudentIdInput.value.trim());
+                const name = sanitizeInput(registerNameInput.value.trim());
+                const department = registerDepartmentSelect.value;
+                const password = registerPasswordInput.value.trim();
+                const confirmPassword = registerConfirmPasswordInput.value.trim();
+                
+                // 客户端验证
+                if (!validateStudentId(studentId)) {
+                    showRegisterMessage('学号格式不正确，应为6-10位数字', 'error');
+                    return;
+                }
+                
+                if (!validateName(name)) {
+                    showRegisterMessage('姓名格式不正确，应为2-20位汉字或字母', 'error');
+                    return;
+                }
+                
+                if (!department) {
+                    showRegisterMessage('请选择院系', 'error');
+                    return;
+                }
+                
+                if (!validatePassword(password)) {
+                    showRegisterMessage('密码至少6位，包含字母和数字', 'error');
+                    return;
+                }
+                
+                if (password !== confirmPassword) {
+                    showRegisterMessage('两次输入的密码不一致', 'error');
+                    return;
+                }
+                
+                // 检查学号是否已存在
+                if (users.some(u => u.id === studentId)) {
+                    showRegisterMessage('该学号已注册', 'error');
+                    return;
+                }
+                
+                // 注册新用户（实际应用中会发送到服务器处理）
+                users.push({
+                    id: studentId,
+                    password: password,  // 实际应用中应加密存储密码
+                    name: name,
+                    department: department
+                });
+                
+                showRegisterMessage('注册成功，请登录', 'success');
+                
+                // 3秒后自动跳转到登录页面
+                setTimeout(() => {
+                    registerContainer.style.display = 'none';
+                    loginContainer.style.display = 'flex';
+                    loginStudentIdInput.value = studentId;
+                    clearAuthForms();
+                }, 3000);
+            });
+            
+            // 退出登录
+            logoutBtn.addEventListener('click', function() {
+                if (confirm('确定要退出登录吗？')) {
+                    // 清除表单
+                    loginStudentIdInput.value = '';
+                    loginPasswordInput.value = '';
+                    
+                    // 切换到登录界面
+                    systemContainer.style.display = 'none';
+                    loginContainer.style.display = 'flex';
+                }
+            });
+            
+            // 工具函数：切换密码可见性
+            function togglePasswordVisibility(input, button) {
+                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                input.setAttribute('type', type);
+                
+                // 切换图标
+                button.innerHTML = type === 'password' ? 
+                    '<i class="fas fa-eye"></i>' : 
+                    '<i class="fas fa-eye-slash"></i>';
+            }
+            
+            // 工具函数：显示登录错误
+            function showLoginError(message) {
+                loginAlert.textContent = message;
+                loginAlert.style.display = 'block';
+            }
+            
+            // 工具函数：隐藏登录错误
+            function hideLoginError() {
+                loginAlert.style.display = 'none';
+            }
+            
+            // 工具函数：显示注册消息
+            function showRegisterMessage(message, type = 'error') {
+                registerAlert.textContent = message;
+                registerAlert.className = type === 'error' ? 'alert alert-danger' : 'alert alert-success';
+                registerAlert.style.display = 'block';
+            }
+            
+            // 工具函数：清除认证表单
+            function clearAuthForms() {
+                hideLoginError();
+                registerAlert.style.display = 'none';
+                loginPasswordInput.value = '';
+                registerStudentIdInput.value = '';
+                registerNameInput.value = '';
+                registerDepartmentSelect.value = '';
+                registerPasswordInput.value = '';
+                registerConfirmPasswordInput.value = '';
+            }
+            
+            // 工具函数：检查记住的用户
+            function checkRememberedUser() {
+                const rememberedUserId = localStorage.getItem('rememberedUserId');
+                if (rememberedUserId) {
+                    loginStudentIdInput.value = rememberedUserId;
+                    rememberMeCheckbox.checked = true;
+                }
+            }
+            
+            // 输入验证函数
+            function validateStudentId(id) {
+                // 学号为6-10位数字
+                const regex = /^[0-9]{6,10}$/;
+                return regex.test(id);
+            }
+            
+            function validateName(name) {
+                // 姓名为2-20位汉字或字母
+                const regex = /^[\u4e00-\u9fa5a-zA-Z ]{2,20}$/;
+                return regex.test(name);
+            }
+            
+            function validatePassword(password) {
+                // 密码至少6位，包含字母和数字
+                const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+                return regex.test(password);
+            }
+            
+            // SQL注入防护：输入 sanitize
+            function sanitizeInput(input) {
+                if (!input) return '';
+                // 移除可能的SQL注入字符
+                return input.replace(/['";\\]/g, '').trim();
+            }
+            
+            // 图书管理系统初始化
+            function initBookSystem(currentUser) {
+                // 示例图书数据
+                let booksData = [
+                    { id: 1, title: '百年孤独', author: '加西亚·马尔克斯', isbn: '9787544253994', year: 1967, genre: '小说', status: 'available', description: '《百年孤独》是哥伦比亚作家加西亚·马尔克斯创作的长篇小说，是拉丁美洲魔幻现实主义文学的代表作。' },
+                    { id: 2, title: '活着', author: '余华', isbn: '9787506365437', year: 1993, genre: '小说', status: 'borrowed', description: '《活着》讲述了农村人福贵悲惨的人生遭遇。' },
+                    { id: 3, title: '人类简史', author: '尤瓦尔·赫拉利', isbn: '9787508647357', year: 2012, genre: '历史', status: 'available', description: '《人类简史》讲述了人类如何从一个普通的非洲灵长类动物，演变成地球的主宰。' },
+                    { id: 4, title: '时间简史', author: '斯蒂芬·霍金', isbn: '9787535732309', year: 1988, genre: '科学', status: 'available', description: '《时间简史》讲述了关于宇宙本性的最前沿知识。' },
+                    { id: 5, title: '红楼梦', author: '曹雪芹', isbn: '9787020002207', year: 1791, genre: '小说', status: 'available', description: '《红楼梦》是中国古典四大名著之首。' },
+                    { id: 6, title: 'JavaScript高级程序设计', author: '尼古拉斯·泽卡斯', isbn: '9787115549655', year: 2020, genre: '技术', status: 'available', description: '《JavaScript高级程序设计》是JavaScript领域的经典著作。' },
+                    { id: 7, title: '中国哲学简史', author: '冯友兰', isbn: '9787108025908', year: 2004, genre: '哲学', status: 'borrowed', description: '《中国哲学简史》是冯友兰先生哲学与思想的结晶。' },
+                    { id: 8, title: '艺术的故事', author: '贡布里希', isbn: '9787508059109', year: 2008, genre: '艺术', status: 'available', description: '《艺术的故事》是E.H.贡布里希爵士的经典著作。' },
+                    { id: 9, title: '史记', author: '司马迁', isbn: '9787101072719', year: -91, genre: '历史', status: 'available', description: '《史记》是西汉史学家司马迁撰写的纪传体史书。' },
+                    { id: 10, title: '三体', author: '刘慈欣', isbn: '9787536692930', year: 2008, genre: '小说', status: 'borrowed', description: '《三体》是刘慈欣创作的长篇科幻小说。' }
+                ];
+
+                // 示例借阅数据
+                let borrowedBooks = [
+                    { bookId: 2, borrowDate: '2023-10-15', dueDate: '2023-10-30', title: '活着', author: '余华', userId: currentUser.id },
+                    { bookId: 10, borrowDate: '2023-10-10', dueDate: '2023-10-25', title: '三体', author: '刘慈欣', userId: currentUser.id }
+                ];
+
+                // DOM元素
+                const booksTableBody = document.getElementById('books-table-body');
+                const emptyState = document.getElementById('empty-state');
+                const searchInput = document.getElementById('search-input');
+                const searchBtn = document.getElementById('search-btn');
+                const showAllBtn = document.getElementById('show-all-btn');
+                const categoryLinks = document.querySelectorAll('.category-list a');
+                const myBorrowedBooksEl = document.getElementById('my-borrowed-books');
+                const myBorrowedCountEl = document.getElementById('my-borrowed');
+                const totalBooksEl = document.getElementById('total-books');
+                const availableBooksEl = document.getElementById('available-books');
+                const addBookBtn = document.getElementById('add-book-btn');
+                
+                // 模态框元素
+                const borrowModal = document.getElementById('borrow-modal');
+                const closeBorrowModal = document.getElementById('close-borrow-modal');
+                const confirmBorrowBtn = document.getElementById('confirm-borrow');
+                const borrowBookInfo = document.getElementById('borrow-book-info');
+                const borrowDaysInput = document.getElementById('borrow-days');
+                
+                const detailModal = document.getElementById('detail-modal');
+                const closeDetailModal = document.getElementById('close-detail-modal');
+                const closeDetailBtn = document.getElementById('close-detail-btn');
+                const bookDetailInfo = document.getElementById('book-detail-info');
+                
+                const addBookModal = document.getElementById('add-book-modal');
+                const closeAddBookModal = document.getElementById('close-add-book-modal');
+                const addBookForm = document.getElementById('add-book-form');
+                
+                // 当前选中的图书ID
+                let currentBookId = null;
+                
+                // 初始化页面
+                renderBooks(booksData);
+                renderBorrowedBooks();
+                updateStats();
+                
+                // 搜索功能
+                searchBtn.addEventListener('click', function() {
+                    const keyword = sanitizeInput(searchInput.value.trim().toLowerCase());
+                    if (keyword) {
+                        const filteredBooks = booksData.filter(book => 
+                            book.title.toLowerCase().includes(keyword) || 
+                            book.author.toLowerCase().includes(keyword) || 
+                            book.isbn.includes(keyword)
+                        );
+                        renderBooks(filteredBooks);
+                    }
+                });
+                
+                // 显示全部图书
+                showAllBtn.addEventListener('click', function() {
+                    searchInput.value = '';
+                    renderBooks(booksData);
+                    // 重置分类选中状态
+                    categoryLinks.forEach(link => {
+                        if (link.dataset.category === 'all') {
+                            link.classList.add('active');
+                        } else {
+                            link.classList.remove('active');
+                        }
+                    });
+                });
+                
+                // 分类筛选
+                categoryLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const category = this.dataset.category;
+                        
+                        // 更新选中状态
+                        categoryLinks.forEach(l => l.classList.remove('active'));
+                        this.classList.add('active');
+                        
+                        if (category === 'all') {
+                            renderBooks(booksData);
+                        } else {
+                            const filteredBooks = booksData.filter(book => book.genre === category);
+                            renderBooks(filteredBooks);
+                        }
+                    });
+                });
+                
+                // 添加图书按钮
+                addBookBtn.addEventListener('click', function() {
+                    addBookModal.style.display = 'flex';
+                    addBookForm.reset();
+                });
+                
+                // 关闭添加图书模态框
+                closeAddBookModal.addEventListener('click', function() {
+                    addBookModal.style.display = 'none';
+                });
+                
+                // 添加图书表单提交
+                addBookForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const title = sanitizeInput(document.getElementById('book-title').value.trim());
+                    const author = sanitizeInput(document.getElementById('book-author').value.trim());
+                    const isbn = sanitizeInput(document.getElementById('book-isbn').value.trim());
+                    const genre = document.getElementById('book-genre').value;
+                    const year = parseInt(document.getElementById('book-year').value);
+                    const description = sanitizeInput(document.getElementById('book-description').value.trim());
+                    
+                    // 简单验证
+                    if (!title || !author || !isbn || !genre || !year) {
+                        alert('请填写必填字段');
+                        return;
+                    }
+                    
+                    // 检查ISBN是否已存在
+                    if (booksData.some(book => book.isbn === isbn)) {
+                        alert('该ISBN的图书已存在');
+                        return;
+                    }
+                    
+                    // 创建新图书
+                    const newBook = {
+                        id: booksData.length + 1,
+                        title: title,
+                        author: author,
+                        isbn: isbn,
+                        year: year,
+                        genre: genre,
+                        status: 'available',
+                        description: description
+                    };
+                    
+                    // 添加到图书列表
+                    booksData.push(newBook);
+                    
+                    // 重新渲染
+                    renderBooks(booksData);
+                    updateStats();
+                    
+                    // 关闭模态框
+                    addBookModal.style.display = 'none';
+                    
+                    alert('图书添加成功');
+                });
+                
+                // 关闭借阅模态框
+                closeBorrowModal.addEventListener('click', function() {
+                    borrowModal.style.display = 'none';
+                });
+                
+                // 确认借阅
+                confirmBorrowBtn.addEventListener('click', function() {
+                    if (!currentBookId) return;
+                    
+                    const book = booksData.find(b => b.id === currentBookId);
+                    if (!book) return;
+                    
+                    const days = parseInt(borrowDaysInput.value);
+                    if (days < 1 || days > 30) {
+                        alert('借阅天数必须在1-30天之间');
+                        return;
+                    }
+                    
+                    // 更新图书状态
+                    book.status = 'borrowed';
+                    
+                    // 计算归还日期
+                    const borrowDate = new Date();
+                    const dueDate = new Date();
+                    dueDate.setDate(borrowDate.getDate() + days);
+                    
+                    // 添加到借阅列表
+                    borrowedBooks.push({
+                        bookId: book.id,
+                        borrowDate: formatDate(borrowDate),
+                        dueDate: formatDate(dueDate),
+                        title: book.title,
+                        author: book.author,
+                        userId: currentUser.id
+                    });
+                    
+                    // 重新渲染
+                    renderBooks(booksData);
+                    renderBorrowedBooks();
+                    updateStats();
+                    
+                    // 关闭模态框
+                    borrowModal.style.display = 'none';
+                });
+                
+                // 关闭详情模态框
+                closeDetailModal.addEventListener('click', function() {
+                    detailModal.style.display = 'none';
+                });
+                
+                closeDetailBtn.addEventListener('click', function() {
+                    detailModal.style.display = 'none';
+                });
+                
+                // 渲染图书列表
+                function renderBooks(books) {
+                    booksTableBody.innerHTML = '';
+                    
+                    if (books.length === 0) {
+                        emptyState.style.display = 'block';
+                        return;
+                    }
+                    
+                    emptyState.style.display = 'none';
+                    
+                    books.forEach(book => {
+                        const row = document.createElement('tr');
+                        
+                        // 状态显示
+                        const statusText = book.status === 'available' ? '可借阅' : '已借出';
+                        const statusClass = book.status === 'available' ? 'status-available' : 'status-borrowed';
+                        
+                        // 操作按钮
+                        const actionBtn = book.status === 'available' 
+                            ? `<button class="btn btn-primary" onclick="openBorrowModal(${book.id})">
+                                <i class="fas fa-hand-holding"></i> 借阅
+                              </button>`
+                            : `<button class="btn btn-primary" disabled>
+                                <i class="fas fa-clock"></i> 已借出
+                              </button>`;
+                        
+                        row.innerHTML = `
+                            <td>${book.title}</td>
+                            <td>${book.author}</td>
+                            <td>${book.isbn}</td>
+                            <td>${book.genre}</td>
+                            <td class="${statusClass}">${statusText}</td>
+                            <td>
+                                <div class="action-buttons">
+                                    ${actionBtn}
+                                    <button class="btn btn-primary" onclick="openDetailModal(${book.id})">
+                                        <i class="fas fa-info-circle"></i> 详情
+                                    </button>
+                                </div>
+                            </td>
+                        `;
+                        
+                        booksTableBody.appendChild(row);
+                    });
+                }
+                
+                // 渲染我的借阅列表
+                function renderBorrowedBooks() {
+                    // 只显示当前用户的借阅
+                    const userBorrowedBooks = borrowedBooks.filter(item => item.userId === currentUser.id);
+                    myBorrowedBooksEl.innerHTML = '';
+                    
+                    if (userBorrowedBooks.length === 0) {
+                        myBorrowedBooksEl.innerHTML = `
+                            <div class="empty-state" style="padding: 20px 10px;">
+                                <i class="fas fa-book" style="font-size: 2rem;"></i>
+                                <p>暂无借阅图书</p>
+                            </div>
+                        `;
+                        return;
+                    }
+                    
+                    userBorrowedBooks.forEach(item => {
+                        const bookItem = document.createElement('div');
+                        bookItem.className = 'book-item';
+                        
+                        // 计算剩余天数
+                        const dueDate = new Date(item.dueDate);
+                        const today = new Date();
+                        const daysLeft = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+                        
+                        bookItem.innerHTML = `
+                            <div class="book-info">
+                                <div class="book-title">${item.title}</div>
+                                <div class="book-meta">
+                                    作者: ${item.author} | 借阅: ${item.borrowDate} | 应还: ${item.dueDate} | 
+                                    ${daysLeft > 0 ? `剩余${daysLeft}天` : `<span style="color: #e74c3c;">已逾期${Math.abs(daysLeft)}天</span>`}
+                                </div>
+                            </div>
+                            <button class="btn btn-danger" onclick="returnBook(${item.bookId})">
+                                <i class="fas fa-undo"></i> 归还
+                            </button>
+                        `;
+                        
+                        myBorrowedBooksEl.appendChild(bookItem);
+                    });
+                    
+                    // 更新我的借阅数量
+                    myBorrowedCountEl.textContent = userBorrowedBooks.length;
+                }
+                
+                // 更新统计数据
+                function updateStats() {
+                    totalBooksEl.textContent = booksData.length;
+                    
+                    const availableCount = booksData.filter(book => book.status === 'available').length;
+                    availableBooksEl.textContent = availableCount;
+                    
+                    const userBorrowedCount = borrowedBooks.filter(item => item.userId === currentUser.id).length;
+                    myBorrowedCountEl.textContent = userBorrowedCount;
+                }
+                
+                // 打开借阅模态框
+                window.openBorrowModal = function(bookId) {
+                    const book = booksData.find(b => b.id === bookId);
+                    if (!book) return;
+                    
+                    currentBookId = bookId;
+                    
+                    borrowBookInfo.innerHTML = `
+                        <h4>${book.title}</h4>
+                        <p><strong>作者:</strong> ${book.author}</p>
+                        <p><strong>ISBN:</strong> ${book.isbn}</p>
+                        <p><strong>类别:</strong> ${book.genre}</p>
+                        <p><strong>出版年份:</strong> ${book.year}</p>
+                    `;
+                    
+                    borrowModal.style.display = 'flex';
+                    borrowDaysInput.value = 15;
+                };
+                
+                // 打开详情模态框
+                window.openDetailModal = function(bookId) {
+                    const book = booksData.find(b => b.id === bookId);
+                    if (!book) return;
+                    
+                    bookDetailInfo.innerHTML = `
+                        <h4>${book.title}</h4>
+                        <p><strong>作者:</strong> ${book.author}</p>
+                        <p><strong>ISBN:</strong> ${book.isbn}</p>
+                        <p><strong>类别:</strong> ${book.genre}</p>
+                        <p><strong>出版年份:</strong> ${book.year}</p>
+                        <p><strong>状态:</strong> ${book.status === 'available' ? '可借阅' : '已借出'}</p>
+                        <hr>
+                        <p><strong>简介:</strong></p>
+                        <p>${book.description || '暂无简介'}</p>
+                    `;
+                    
+                    detailModal.style.display = 'flex';
+                };
+                
+                // 归还图书
+                window.returnBook = function(bookId) {
+                    if (!confirm('确定要归还这本书吗？')) return;
+                    
+                    // 更新图书状态
+                    const book = booksData.find(b => b.id === bookId);
+                    if (book) {
+                        book.status = 'available';
+                    }
+                    
+                    // 从借阅列表中移除
+                    borrowedBooks = borrowedBooks.filter(item => !(item.bookId === bookId && item.userId === currentUser.id));
+                    
+                    // 重新渲染
+                    renderBooks(booksData);
+                    renderBorrowedBooks();
+                    updateStats();
+                };
+                
+                // 工具函数：格式化日期
+                function formatDate(date) {
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    return `${year}-${month}-${day}`;
+                }
+            }
+        });
+    </script>
+</body>
+</html>
